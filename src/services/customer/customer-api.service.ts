@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import * as customers from '../../assets/data/customers.json';
+import customers from '../../assets/data/customers.json';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 
