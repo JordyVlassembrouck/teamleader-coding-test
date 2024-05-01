@@ -12,25 +12,25 @@ export class OrderApiService {
 
   getOrders(): Observable<Order[]> {
     return this.http
-      .get<OrderAPIModel[]>('/api/orders')
+      .get<OrderApiModel[]>('/api/orders')
       .pipe(
-        map((orderAPIModels: OrderAPIModel[]) =>
-          orderAPIModels.map((orderAPIModel: OrderAPIModel) =>
-            mapOrderFrom(orderAPIModel)
+        map((orderApiModels: OrderApiModel[]) =>
+          orderApiModels.map((orderApiModel: OrderApiModel) =>
+            mapOrderFrom(orderApiModel)
           )
         )
       );
   }
 }
 
-export interface OrderAPIModel {
+export interface OrderApiModel {
   id: string;
   'customer-id': string;
-  items: ItemAPIModel[];
+  items: ItemApiModel[];
   total: string;
 }
 
-export interface ItemAPIModel {
+export interface ItemApiModel {
   'product-id': string;
   quantity: string;
   'unit-price': string;

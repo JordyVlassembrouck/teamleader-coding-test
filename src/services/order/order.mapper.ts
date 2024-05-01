@@ -1,15 +1,15 @@
-import { Item, ItemAPIModel, Order, OrderAPIModel } from "./order-api.service";
+import { Item, ItemApiModel, Order, OrderApiModel } from "./order-api.service";
 
-export function mapOrderFrom(order: OrderAPIModel): Order {
+export function mapOrderFrom(order: OrderApiModel): Order {
   return {
     id: order.id,
     customerId: order['customer-id'],
-    items: order.items.map((itemAPIModel: ItemAPIModel) => mapItemFrom(itemAPIModel)),
+    items: order.items.map((itemApiModel: ItemApiModel) => mapItemFrom(itemApiModel)),
     total: order.total,
   };
 }
 
-function mapItemFrom(item: ItemAPIModel): Item {
+function mapItemFrom(item: ItemApiModel): Item {
   return {
     productId: item['product-id'],
     quantity: item.quantity,

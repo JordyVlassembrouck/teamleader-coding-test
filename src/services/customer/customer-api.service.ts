@@ -6,7 +6,7 @@ import { of } from 'rxjs/internal/observable/of';
 @Injectable({
   providedIn: 'root'
 })
-export class CustomerAPIService {
+export class CustomerApiService {
   private customers: Customer[] = customers;
 
   getCustomers(): Observable<Customer[]> {

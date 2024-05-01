@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { Customer, CustomerAPIService } from './customer-api.service';
+import { Customer, CustomerApiService } from './customer-api.service';
 
-describe('CustomerAPIService', () => {
-  let service: CustomerAPIService;
+describe('CustomerApiService', () => {
+  let service: CustomerApiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(CustomerAPIService);
+    service = TestBed.inject(CustomerApiService);
   });
 
   describe('#getCustomers', () => {

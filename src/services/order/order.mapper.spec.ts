@@ -1,9 +1,9 @@
 import { mapOrderFrom } from './order.mapper';
 
 describe('#mapOrderFrom', () => {
-  it('should map an OrderAPIModel object to an Order object', () => {
+  it('should map an OrderApiModel object to an Order object', () => {
     // given 
-    const orderAPIModel = {
+    const orderApiModel = {
       'id': '1',
       'customer-id': '2',
       'items': [
@@ -24,7 +24,7 @@ describe('#mapOrderFrom', () => {
     };
 
     //when
-    const order = mapOrderFrom(orderAPIModel);
+    const order = mapOrderFrom(orderApiModel);
 
     // then
     expect(order.id).toEqual('1');
@@ -41,9 +41,9 @@ describe('#mapOrderFrom', () => {
     expect(order.total).toEqual('200.0');
   });
 
-  it('should map an OrderAPIModel object to an Order object with empty items', () => {
+  it('should map an OrderApiModel object to an Order object with empty items', () => {
     // given 
-    const orderAPIModel = {
+    const orderApiModel = {
       'id': '1',
       'customer-id': '2',
       'items': [],
@@ -51,7 +51,7 @@ describe('#mapOrderFrom', () => {
     };
 
     //when
-    const order = mapOrderFrom(orderAPIModel);
+    const order = mapOrderFrom(orderApiModel);
 
     // then
     expect(order.items).toEqual([]);
