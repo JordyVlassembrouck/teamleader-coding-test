@@ -1,1 +1,10 @@
-<p>orders-container works!</p>
+@if (orders$$ | async; as orders) {
+  @for (order of orders; track order.id) {
+    <p>{{order.id}} {{order.customerId}} €{{order.total}}</p>
+    <ul>
+      @for (item of order.items; track item.productId) {
+        <li>{{item.productId}} {{item.quantity}} €{{item.total}} {{item.unitPrice}}</li>
+      }
+    </ul>
+  }
+}

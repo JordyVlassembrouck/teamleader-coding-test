@@ -4,11 +4,13 @@ import {
   OrderApiService,
 } from '../../../../services/order/order-api.service';
 import { ReplaySubject } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-orders-container',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, HttpClientModule],
   templateUrl: './orders-container.component.html',
   styleUrl: './orders-container.component.sass',
 })

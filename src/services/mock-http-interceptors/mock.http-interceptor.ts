@@ -4,8 +4,12 @@ import * as secondOrder from '../../assets/data/example-orders/order2.json';
 import * as thirdOrder from '../../assets/data/example-orders/order3.json';
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { Injectable } from '@angular/core';
 
-export class MockOrderHttpInterceptor implements HttpInterceptor {
+@Injectable({
+  providedIn: 'root',
+})
+export class MockHttpInterceptor implements HttpInterceptor {
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
