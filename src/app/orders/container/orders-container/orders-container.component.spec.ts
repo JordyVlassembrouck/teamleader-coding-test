@@ -1,19 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { OrdersContainerComponent } from './orders-container.component';
-import { Order, OrderApiService } from '../../../../services/order/order-api.service';
 import { of } from 'rxjs/internal/observable/of';
+import { CustomerApiService } from '../../../../services/customer/customer-api.service';
+import {
+  Order,
+  OrderApiService,
+} from '../../../../services/order/order-api.service';
+import { OrdersContainerComponent } from './orders-container.component';
 
 describe('OrdersContainerComponent', () => {
   let component: OrdersContainerComponent;
   let fixture: ComponentFixture<OrdersContainerComponent>;
-  let ordersMockApiService = jasmine.createSpyObj(OrderApiService, [
+  let orderMockApiService = jasmine.createSpyObj(OrderApiService, [
     'getOrders',
+  ]);
+  let customerMockApiService = jasmine.createSpyObj(CustomerApiService, [
+    'getCustomers',
   ]);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OrdersContainerComponent],
-      providers: [{ provide: OrderApiService, useValue: ordersMockApiService }],
+      providers: [
+        { provide: OrderApiService, useValue: orderMockApiService },
+        { provide: CustomerApiService, useValue: customerMockApiService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrdersContainerComponent);
@@ -21,9 +31,10 @@ describe('OrdersContainerComponent', () => {
   });
 
   describe('#ngOnInit', () => {
-    it('should call getOrders and emit on orders$$', (done) => {
+    it('should get all orders and emit on orders$$', (done) => {
       // given
-      ordersMockApiService.getOrders.and.returnValue(of([]));
+      orderMockApiService.getOrders.and.returnValue(of([]));
+      customerMockApiService.getCustomers.and.returnValue(of([]));
 
       component.orders$$.subscribe((orders: Order[]) => {
         expect(orders).toEqual([]);
@@ -34,7 +45,19 @@ describe('OrdersContainerComponent', () => {
       component.ngOnInit();
 
       // then
-      expect(ordersMockApiService.getOrders).toHaveBeenCalled();
+      expect(orderMockApiService.getOrders).toHaveBeenCalled();
+    });
+
+    it('should get all customers', () => {
+      // given
+      orderMockApiService.getOrders.and.returnValue(of([]));
+      customerMockApiService.getCustomers.and.returnValue(of([]));
+
+      // when
+      component.ngOnInit();
+
+      // then
+      expect(customerMockApiService.getCustomers).toHaveBeenCalled();
     });
   });
 });
