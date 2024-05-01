@@ -9,10 +9,6 @@ describe('CustomerAPIService', () => {
     service = TestBed.inject(CustomerAPIService);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
   describe('#getCustomers', () => {
     it('should return an observable of all customers', (done) => {
       // given when
