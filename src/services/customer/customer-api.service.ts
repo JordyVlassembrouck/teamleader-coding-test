@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import customers from '../../assets/data/customers.json';
 import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CustomerApiService {
-  private customers: Customer[] = customers;
+  constructor(private http: HttpClient) {}
 
   getCustomers(): Observable<Customer[]> {
-    return of(this.customers);
+    return this.http.get<Customer[]>('/api/customers');
   }
 }
 

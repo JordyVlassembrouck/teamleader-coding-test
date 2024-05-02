@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  Order,
   OrderApiService,
+  OrderWithCustomer,
 } from '../../../../services/order/order-api.service';
 import { ReplaySubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { Customer, CustomerApiService } from '../../../../services/customer/customer-api.service';
 
 @Component({
   selector: 'app-orders-container',
@@ -16,16 +15,19 @@ import { Customer, CustomerApiService } from '../../../../services/customer/cust
   styleUrl: './orders-container.component.sass',
 })
 export class OrdersContainerComponent implements OnInit {
-  orders$$ = new ReplaySubject<Order[]>(1);
+  orders$$ = new ReplaySubject<OrderWithCustomer[]>(1);
 
-  constructor(private orderApiService: OrderApiService, private customerApiService: CustomerApiService) {}
+  constructor(private orderApiService: OrderApiService) {}
 
   ngOnInit(): void {
-    this.orderApiService.getOrders().subscribe((orders: Order[]) => {
-      this.orders$$.next(orders);
-    });
-    this.customerApiService.getCustomers().subscribe((customers: Customer[]) => {
-      console.log(customers);
-    });
+    this.orderApiService
+      .getOrdersWithCustomers()
+      .subscribe((orders: OrderWithCustomer[]) => {
+        this.orders$$.next(orders);
+      });
+  }
+
+  protected openOrder(orderId: string): void {
+    console.log('open order:', orderId);
   }
 }

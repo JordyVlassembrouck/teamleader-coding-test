@@ -1,10 +1,22 @@
-@if (orders$$ | async; as orders) {
-  @for (order of orders; track order.id) {
-    <p>{{order.id}} {{order.customerId}} €{{order.total}}</p>
-    <ul>
-      @for (item of order.items; track item.productId) {
-        <li>{{item.productId}} {{item.quantity}} €{{item.total}} {{item.unitPrice}}</li>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Order</th>
+      <th scope="col">Customer</th>
+      <th scope="col">Total</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  @if (orders$$ | async; as orders) {
+    <tbody>
+      @for (order of orders; track order.id) {
+        <tr class="clickable" (click)="openOrder(order.id)">
+          <th scope="row">{{order.id}}</th>
+          <td>{{order.customerName}}</td>
+          <td>{{order.total}}</td>
+          <td>Draft</td>
+        </tr>    
       }
-    </ul>
+    </tbody>
   }
-}
+</table>
