@@ -6,18 +6,19 @@ import {
 import { ReplaySubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-orders-container',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule, HttpClientModule, RouterModule],
   templateUrl: './orders-container.component.html',
   styleUrl: './orders-container.component.sass',
 })
 export class OrdersContainerComponent implements OnInit {
   orders$$ = new ReplaySubject<OrderWithCustomer[]>(1);
 
-  constructor(private orderApiService: OrderApiService) {}
+  constructor(private orderApiService: OrderApiService, private router: Router) {}
 
   ngOnInit(): void {
     this.orderApiService
@@ -28,6 +29,6 @@ export class OrdersContainerComponent implements OnInit {
   }
 
   protected openOrder(orderId: string): void {
-    console.log('open order:', orderId);
+    this.router.navigate(['orders', orderId]);
   }
 }
