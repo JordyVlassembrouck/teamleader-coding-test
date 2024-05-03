@@ -10,7 +10,16 @@ import { Customer, CustomerApiService } from '../customer/customer-api.service';
   providedIn: 'root',
 })
 export class OrderApiService {
-  constructor(private http: HttpClient, private customerApiService: CustomerApiService) {}
+  constructor(
+    private http: HttpClient,
+    private customerApiService: CustomerApiService
+  ) {}
+
+  getOrder(orderId: string): Observable<Order> {
+    return this.http
+      .get<OrderApiModel>(`/api/orders/${orderId}`)
+      .pipe(map((orderApiModel: OrderApiModel) => mapOrderFrom(orderApiModel)));
+  }
 
   private getOrders(): Observable<Order[]> {
     return this.http

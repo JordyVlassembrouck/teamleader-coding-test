@@ -15,9 +15,20 @@ export class MockHttpInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    const orders = [firstOrder, secondOrder, thirdOrder];
+
     if (req.url === '/api/orders') {
-      const orders = [firstOrder, secondOrder, thirdOrder];
       return of(new HttpResponse({ status: 200, body: orders }));
+    }
+
+    if (req.url.includes('/api/orders/')) {
+      const orderId = req.url.split('/api/orders/').pop();
+      const order = orders.find((o) => o.id === orderId);
+      if (!order) {
+        return of(new HttpResponse({ status: 404 }));
+      } else {
+        return of(new HttpResponse({ status: 200, body: order }));
+      }
     }
 
     if (req.url === '/api/customers') {

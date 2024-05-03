@@ -1,1 +1,7 @@
-<p>order-detail-container works!</p>
+@if (order$$ | async; as order) {
+  <h1>{{order.id}}</h1>
+  <h3>{{order.total}}</h3>
+  @for (item of order.items; track item.productId) {
+    <p>{{item.productId}} - {{item.unitPrice}} - {{item.quantity}} - {{item.total}}</p>
+  }
+}

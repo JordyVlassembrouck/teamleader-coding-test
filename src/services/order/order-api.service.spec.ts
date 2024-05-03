@@ -65,4 +65,32 @@ describe('OrderApiService', () => {
       httpTestingController.verify();
     });
   });
+
+  describe('#getOrder', () => {
+    it('should return an observable with 1 order', (done) => {
+      // given
+      orderApiService.getOrder(thirdOrder.id).subscribe((order: Order) => {
+        // then
+        expect(order.id).toEqual(thirdOrder.id);
+        expect(order.customerId).toEqual(thirdOrder['customer-id']);
+        expect(order.items.length).toEqual(thirdOrder.items.length);
+        expect(order.items[0].productId).toEqual(thirdOrder.items[0]['product-id']);
+        expect(order.items[0].quantity).toEqual(thirdOrder.items[0].quantity);
+        expect(order.items[0].unitPrice).toEqual(thirdOrder.items[0]['unit-price']);
+        expect(order.items[0].total).toEqual(thirdOrder.items[0].total);
+        expect(order.items[1].productId).toEqual(thirdOrder.items[1]['product-id']);
+        expect(order.items[1].productId).toEqual(thirdOrder.items[1]['product-id']);
+        expect(order.items[1].quantity).toEqual(thirdOrder.items[1].quantity);
+        expect(order.items[1].unitPrice).toEqual(thirdOrder.items[1]['unit-price']);
+        expect(order.items[1].total).toEqual(thirdOrder.items[1].total);
+        expect(order.total).toEqual(thirdOrder.total);
+        done();
+      });
+      const req = httpTestingController.expectOne(`/api/orders/${thirdOrder.id}`);
+
+      // when
+      req.flush(thirdOrder);
+      httpTestingController.verify();
+    });
+  });
 });
