@@ -3,6 +3,20 @@
   <h2 class="mt-2">Order {{order.id}}</h2>
   <h3>{{order.total}}</h3>
   @for (item of order.items; track item.productId) {
-    <p>{{item.productId}} - {{item.unitPrice}} - {{item.quantity}} - {{item.total}}</p>
+    <div class="card" style="width:18em">
+      <div class="card-header"><span class="fw-bold">Product Name</span>&nbsp;<span class="text-body-tertiary">({{item.productId}})</span></div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col">
+            {{item.quantity}} x €{{item.unitPrice}}
+          </div>
+          <div class="col text-end fw-bold">
+            €{{item.total}}
+          </div>
+        </div>
+        <div class="row">
+        </div>
+      </div>    
+    </div>
   }
 }
