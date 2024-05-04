@@ -27,6 +27,7 @@ export class OrderDetailContainerComponent implements OnInit {
       this.order$$.next(order);
     });
     this.productHttpService.getProducts().subscribe((products: Product[]) => {
+      console.log(products);
       this.products$$.next(products);
     });
   }
