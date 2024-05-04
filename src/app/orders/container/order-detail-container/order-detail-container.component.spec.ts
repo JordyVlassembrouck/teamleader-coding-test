@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OrderDetailContainerComponent } from './order-detail-container.component';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { OrderApiService } from '../../../../services/order/order-api.service';
+import { OrderHttpService } from '../../../../services/order/order.http-service';
 import { of } from 'rxjs/internal/observable/of';
 import { ProductHttpService } from '../../../../services/product/product.http-service';
 
@@ -10,14 +10,14 @@ const ORDER_ID = '123';
 describe('OrderDetailContainerComponent', () => {
   let component: OrderDetailContainerComponent;
   let fixture: ComponentFixture<OrderDetailContainerComponent>;
-  let orderApiServiceMock = jasmine.createSpyObj(OrderApiService, ['getOrder']);
+  let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, ['getOrder']);
   let productHttpServiceMock = jasmine.createSpyObj(ProductHttpService, ['getProducts']);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OrderDetailContainerComponent, RouterModule],
       providers: [
-        { provide: OrderApiService, useValue: orderApiServiceMock },
+        { provide: OrderHttpService, useValue: orderHttpServiceMock },
         { provide: ProductHttpService, useValue: productHttpServiceMock },
         {
           provide: ActivatedRoute,
@@ -31,7 +31,7 @@ describe('OrderDetailContainerComponent', () => {
     fixture = TestBed.createComponent(OrderDetailContainerComponent);
     component = fixture.componentInstance;
 
-    orderApiServiceMock.getOrder.and.returnValue(of({}));
+    orderHttpServiceMock.getOrder.and.returnValue(of({}));
     productHttpServiceMock.getProducts.and.returnValue(of([]));
   });
 
@@ -43,7 +43,7 @@ describe('OrderDetailContainerComponent', () => {
       component.ngOnInit();
 
       // then
-      expect(orderApiServiceMock.getOrder).toHaveBeenCalledWith(ORDER_ID);
+      expect(orderHttpServiceMock.getOrder).toHaveBeenCalledWith(ORDER_ID);
     });
 
     it('should throw an error when no order ID is found in the URL', () => {

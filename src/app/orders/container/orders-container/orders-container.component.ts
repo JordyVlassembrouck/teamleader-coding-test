@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  OrderApiService,
+  OrderHttpService,
   OrderWithCustomer,
-} from '../../../../services/order/order-api.service';
+} from '../../../../services/order/order.http-service';
 import { ReplaySubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,10 +18,10 @@ import { Router, RouterModule } from '@angular/router';
 export class OrdersContainerComponent implements OnInit {
   orders$$ = new ReplaySubject<OrderWithCustomer[]>(1);
 
-  constructor(private orderApiService: OrderApiService, private router: Router) {}
+  constructor(private orderHttpService: OrderHttpService, private router: Router) {}
 
   ngOnInit(): void {
-    this.orderApiService
+    this.orderHttpService
       .getOrdersWithCustomers()
       .subscribe((orders: OrderWithCustomer[]) => {
         this.orders$$.next(orders);

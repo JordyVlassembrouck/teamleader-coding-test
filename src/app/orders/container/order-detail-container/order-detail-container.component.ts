@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { Order, OrderApiService } from '../../../../services/order/order-api.service';
+import { Order, OrderHttpService } from '../../../../services/order/order.http-service';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { CommonModule } from '@angular/common';
 import { Product, ProductHttpService } from '../../../../services/product/product.http-service';
@@ -16,14 +16,14 @@ export class OrderDetailContainerComponent implements OnInit {
   order$$ = new ReplaySubject<Order>(1);
   products$$ = new ReplaySubject<Product[]>(1);
 
-  constructor(private route: ActivatedRoute, private orderApiService: OrderApiService, private productHttpService: ProductHttpService) {}
+  constructor(private route: ActivatedRoute, private orderHttpService: OrderHttpService, private productHttpService: ProductHttpService) {}
 
   ngOnInit(): void {
     const orderId = this.route.snapshot.paramMap.get('id');
     if (!orderId) {
       throw new Error('No order ID found in the URL');
     }
-    this.orderApiService.getOrder(orderId).subscribe((order: Order) => {
+    this.orderHttpService.getOrder(orderId).subscribe((order: Order) => {
       this.order$$.next(order);
     });
     this.productHttpService.getProducts().subscribe((products: Product[]) => {

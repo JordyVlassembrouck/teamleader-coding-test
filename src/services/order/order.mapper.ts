@@ -1,4 +1,4 @@
-import { Item, ItemApiModel, Order, OrderApiModel } from "./order-api.service";
+import { Item, ItemApiModel, Order, OrderApiModel } from "./order.http-service";
 
 export function mapOrderFrom(order: OrderApiModel): Order {
   return {

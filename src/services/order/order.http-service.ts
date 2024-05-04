@@ -9,7 +9,7 @@ import { Customer, CustomerApiService } from '../customer/customer-api.service';
 @Injectable({
   providedIn: 'root',
 })
-export class OrderApiService {
+export class OrderHttpService {
   constructor(
     private http: HttpClient,
     private customerApiService: CustomerApiService

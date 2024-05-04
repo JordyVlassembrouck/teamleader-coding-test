@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Order, OrderApiService, OrderWithCustomer } from './order-api.service';
+import { Order, OrderHttpService, OrderWithCustomer } from './order.http-service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
@@ -11,8 +11,8 @@ import customers from '../../assets/data/customers.json';
 import { CustomerApiService } from '../customer/customer-api.service';
 import { of } from 'rxjs/internal/observable/of';
 
-describe('OrderApiService', () => {
-  let orderApiService: OrderApiService;
+describe('OrderHttpService', () => {
+  let orderHttpService: OrderHttpService;
   let customerMockApiService = jasmine.createSpyObj(CustomerApiService, [
     'getCustomers',
   ]);
@@ -25,7 +25,7 @@ describe('OrderApiService', () => {
       providers: [{ provide: CustomerApiService, useValue: customerMockApiService }],
     });
     
-    orderApiService = TestBed.inject(OrderApiService);
+    orderHttpService = TestBed.inject(OrderHttpService);
     httpClient = TestBed.inject(HttpClient);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
@@ -35,7 +35,7 @@ describe('OrderApiService', () => {
       // given
       customerMockApiService.getCustomers.and.returnValue(of(customers));
 
-      orderApiService.getOrdersWithCustomers().subscribe((orders: OrderWithCustomer[]) => {
+      orderHttpService.getOrdersWithCustomers().subscribe((orders: OrderWithCustomer[]) => {
         // then
         expect(orders.length).toEqual(2);
         expect(orders[0].id).toEqual(firstOrder.id);
@@ -69,7 +69,7 @@ describe('OrderApiService', () => {
   describe('#getOrder', () => {
     it('should return an observable with 1 order', (done) => {
       // given
-      orderApiService.getOrder(thirdOrder.id).subscribe((order: Order) => {
+      orderHttpService.getOrder(thirdOrder.id).subscribe((order: Order) => {
         // then
         expect(order.id).toEqual(thirdOrder.id);
         expect(order.customerId).toEqual(thirdOrder['customer-id']);

@@ -2,21 +2,21 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs/internal/observable/of';
 import {
   Order,
-  OrderApiService,
-} from '../../../../services/order/order-api.service';
+  OrderHttpService,
+} from '../../../../services/order/order.http-service';
 import { OrdersContainerComponent } from './orders-container.component';
 
 describe('OrdersContainerComponent', () => {
   let component: OrdersContainerComponent;
   let fixture: ComponentFixture<OrdersContainerComponent>;
-  let orderApiServiceMock = jasmine.createSpyObj(OrderApiService, [
+  let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, [
     'getOrdersWithCustomers',
   ]);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OrdersContainerComponent],
-      providers: [{ provide: OrderApiService, useValue: orderApiServiceMock }],
+      providers: [{ provide: OrderHttpService, useValue: orderHttpServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrdersContainerComponent);
@@ -26,7 +26,7 @@ describe('OrdersContainerComponent', () => {
   describe('#ngOnInit', () => {
     it('should get all orders and emit on orders$$', (done) => {
       // given
-      orderApiServiceMock.getOrdersWithCustomers.and.returnValue(of([]));
+      orderHttpServiceMock.getOrdersWithCustomers.and.returnValue(of([]));
 
       component.orders$$.subscribe((orders: Order[]) => {
         expect(orders).toEqual([]);
@@ -37,7 +37,7 @@ describe('OrdersContainerComponent', () => {
       component.ngOnInit();
 
       // then
-      expect(orderApiServiceMock.getOrdersWithCustomers).toHaveBeenCalled();
+      expect(orderHttpServiceMock.getOrdersWithCustomers).toHaveBeenCalled();
     });
   });
 });
