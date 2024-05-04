@@ -8,12 +8,12 @@ import { HttpClient } from '@angular/common/http';
 import firstOrder from '../../assets/data/example-orders/order1.json';
 import thirdOrder from '../../assets/data/example-orders/order3.json';
 import customers from '../../assets/data/customers.json';
-import { CustomerApiService } from '../customer/customer-api.service';
+import { CustomerHttpService } from '../customer/customer.http-service';
 import { of } from 'rxjs/internal/observable/of';
 
 describe('OrderHttpService', () => {
   let orderHttpService: OrderHttpService;
-  let customerMockApiService = jasmine.createSpyObj(CustomerApiService, [
+  let customerHttpServiceMock = jasmine.createSpyObj(CustomerHttpService, [
     'getCustomers',
   ]);
   let httpClient: HttpClient;
@@ -22,7 +22,7 @@ describe('OrderHttpService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [{ provide: CustomerApiService, useValue: customerMockApiService }],
+      providers: [{ provide: CustomerHttpService, useValue: customerHttpServiceMock }],
     });
     
     orderHttpService = TestBed.inject(OrderHttpService);
@@ -33,7 +33,7 @@ describe('OrderHttpService', () => {
   describe('#getOrdersWithCustomers', () => {
     it('should return an observable of all orders aggregated with their customer name', (done) => {
       // given
-      customerMockApiService.getCustomers.and.returnValue(of(customers));
+      customerHttpServiceMock.getCustomers.and.returnValue(of(customers));
 
       orderHttpService.getOrdersWithCustomers().subscribe((orders: OrderWithCustomer[]) => {
         // then

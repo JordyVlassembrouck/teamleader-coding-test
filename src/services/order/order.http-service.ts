@@ -4,7 +4,7 @@ import { mapOrderFrom } from './order.mapper';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/internal/operators/map';
 import { combineLatest } from 'rxjs';
-import { Customer, CustomerApiService } from '../customer/customer-api.service';
+import { Customer, CustomerHttpService } from '../customer/customer.http-service';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ import { Customer, CustomerApiService } from '../customer/customer-api.service';
 export class OrderHttpService {
   constructor(
     private http: HttpClient,
-    private customerApiService: CustomerApiService
+    private customerHttpService: CustomerHttpService
   ) {}
 
   getOrder(orderId: string): Observable<Order> {
@@ -36,7 +36,7 @@ export class OrderHttpService {
   getOrdersWithCustomers(): Observable<OrderWithCustomer[]> {
     return combineLatest([
       this.getOrders(),
-      this.customerApiService.getCustomers(),
+      this.customerHttpService.getCustomers(),
     ]).pipe(
       map(([orders, customers]: [Order[], Customer[]]) =>
         this.addCustomerNameToOrders(orders, customers)

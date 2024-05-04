@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Customer, CustomerApiService } from './customer-api.service';
+import { Customer, CustomerHttpService } from './customer.http-service';
 import { HttpClient } from '@angular/common/http';
 import {
   HttpClientTestingModule,
@@ -7,8 +7,8 @@ import {
 } from '@angular/common/http/testing';
 import customers from '../../assets/data/customers.json';
 
-describe('CustomerApiService', () => {
-  let service: CustomerApiService;
+describe('CustomerHttpService', () => {
+  let service: CustomerHttpService;
   let httpClient: HttpClient;
   let httpTestingController: HttpTestingController;
 
@@ -17,7 +17,7 @@ describe('CustomerApiService', () => {
       imports: [HttpClientTestingModule],
     });
 
-    service = TestBed.inject(CustomerApiService);
+    service = TestBed.inject(CustomerHttpService);
     httpClient = TestBed.inject(HttpClient);
     httpTestingController = TestBed.inject(HttpTestingController);
   });
