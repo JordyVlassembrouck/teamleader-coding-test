@@ -9,14 +9,14 @@ import { OrdersContainerComponent } from './orders-container.component';
 describe('OrdersContainerComponent', () => {
   let component: OrdersContainerComponent;
   let fixture: ComponentFixture<OrdersContainerComponent>;
-  let orderMockApiService = jasmine.createSpyObj(OrderApiService, [
+  let orderApiServiceMock = jasmine.createSpyObj(OrderApiService, [
     'getOrdersWithCustomers',
   ]);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OrdersContainerComponent],
-      providers: [{ provide: OrderApiService, useValue: orderMockApiService }],
+      providers: [{ provide: OrderApiService, useValue: orderApiServiceMock }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrdersContainerComponent);
@@ -26,7 +26,7 @@ describe('OrdersContainerComponent', () => {
   describe('#ngOnInit', () => {
     it('should get all orders and emit on orders$$', (done) => {
       // given
-      orderMockApiService.getOrdersWithCustomers.and.returnValue(of([]));
+      orderApiServiceMock.getOrdersWithCustomers.and.returnValue(of([]));
 
       component.orders$$.subscribe((orders: Order[]) => {
         expect(orders).toEqual([]);
@@ -37,7 +37,7 @@ describe('OrdersContainerComponent', () => {
       component.ngOnInit();
 
       // then
-      expect(orderMockApiService.getOrdersWithCustomers).toHaveBeenCalled();
+      expect(orderApiServiceMock.getOrdersWithCustomers).toHaveBeenCalled();
     });
   });
 });

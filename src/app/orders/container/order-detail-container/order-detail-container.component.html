@@ -1,22 +1,37 @@
 @if (order$$ | async; as order) {
-  <a class="link-secondary link-offset-2 link-underline link-underline-opacity-0" [routerLink]="['orders']"><i class="bi bi-arrow-left"></i> Back to orders</a>
-  <h2 class="mt-2">Order {{order.id}}</h2>
-  <h3>{{order.total}}</h3>
-  @for (item of order.items; track item.productId) {
-    <div class="card" style="width:18em">
-      <div class="card-header"><span class="fw-bold">Product Name</span>&nbsp;<span class="text-body-tertiary">({{item.productId}})</span></div>
-      <div class="card-body">
-        <div class="row">
-          <div class="col">
-            {{item.quantity}} x €{{item.unitPrice}}
+  <div class="container">
+    <a class="link-secondary link-offset-2 link-underline link-underline-opacity-0" [routerLink]="['orders']"><i class="bi bi-arrow-left"></i> Back to orders</a>
+    <h2 class="mt-2">Order {{order.id}}</h2>
+    <h3>{{order.total}}</h3>
+    @for (item of order.items; track item.productId) {
+      <div class="row">
+        <div class="col-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row mb-2">
+                <div class="col">
+                  <span class="fs-5 fw-bold">Product Name</span>&nbsp;<span class="text-body-tertiary">({{item.productId}})</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  {{item.quantity}} x €{{item.unitPrice}}
+                </div>
+                <div class="col text-end fw-bold">
+                  €{{item.total}}
+                </div>
+              </div>
+              <div class="row">
+              </div>
+            </div>    
           </div>
-          <div class="col text-end fw-bold">
-            €{{item.total}}
-          </div>
+        </div>  
+        <div class="col-1">
+          <button type="button" class="btn btn-light btn-sm rounded-circle" (click)="removeProduct(item.productId)"><i class="bi bi-x-lg"></i></button>
         </div>
-        <div class="row">
-        </div>
-      </div>    
-    </div>
-  }
+        <div class="col"></div>
+      </div>
+    }
+    <button class="btn btn-primary rounded-pill" (click)="addProduct()">Add product</button>
+  </div>
 }
