@@ -59,6 +59,7 @@ export class OrderDetailContainer implements OnInit {
     } else {
       this.addNewItemToOrder(productId, quantity, order);
     }
+    order.total = this.calculateNewTotal(order.items)
   }
 
   private findItemInOrder(order: Order, productId: string): Item | undefined {
@@ -95,6 +96,11 @@ export class OrderDetailContainer implements OnInit {
     order.items = order.items.filter(
       (item: Item) => item.productId !== productId
     );
+    order.total = this.calculateNewTotal(order.items)
+  }
+
+  private calculateNewTotal(items: Item[]): number {
+    return items.reduce((total, item) => total + item.total, 0);
   }
 
   getProductName(productId: string): string {

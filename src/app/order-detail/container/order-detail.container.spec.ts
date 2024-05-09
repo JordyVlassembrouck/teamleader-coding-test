@@ -105,7 +105,7 @@ describe('OrderDetailContainer', () => {
   });
 
   describe('#addProduct', () => {
-    it('should add product to already existing items in the order', () => {
+    it('should add product to already existing items in the order and calculate new total', () => {
       // given
       const ITEM: Item = {
         productId: FIRST_PRODUCT.id,
@@ -117,31 +117,26 @@ describe('OrderDetailContainer', () => {
         id: ORDER_ID,
         customerId: '3',
         items: [ITEM],
-        total: 20,
+        total: 10,
       };
       orderHttpServiceMock.getOrder.and.returnValue(of(ORDER));
 
       fixture.detectChanges();
-      expect(component.order$$.getValue().items).toEqual([ITEM]);
+      expect(ORDER.items).toEqual([ITEM]);
+      expect(ORDER.total).toEqual(10);
 
       // when
-      const newItem: Item = {
-        productId: FIRST_PRODUCT.id,
-        quantity: 3,
-        unitPrice: 5,
-        total: 15,
-      };
-      
-      component.addProductTo(ORDER, newItem.productId, newItem.quantity);
+      component.addProductTo(ORDER, FIRST_PRODUCT.id, 3);
 
       // then
-      expect(component.order$$.getValue().items.length).toEqual(1);
-      expect(component.order$$.getValue().items[0].productId).toEqual(ITEM.productId);
-      expect(component.order$$.getValue().items[0].quantity).toEqual(5);
-      expect(component.order$$.getValue().items[0].total).toEqual(25);
+      expect(ORDER.items.length).toEqual(1);
+      expect(ORDER.items[0].productId).toEqual(ITEM.productId);
+      expect(ORDER.items[0].quantity).toEqual(5);
+      expect(ORDER.items[0].total).toEqual(25);
+      expect(ORDER.total).toEqual(25);
     });
 
-    it('should add product as new item in the order when it does not yet exist', () => {
+    it('should add product as new item in the order when it does not yet exist and calculate new total', () => {
       // given
       const ITEM: Item = {
         productId: FIRST_PRODUCT.id,
@@ -153,24 +148,26 @@ describe('OrderDetailContainer', () => {
         id: ORDER_ID,
         customerId: '3',
         items: [ITEM],
-        total: 20,
+        total: 10,
       };
       orderHttpServiceMock.getOrder.and.returnValue(of(ORDER));
 
       fixture.detectChanges();
-      expect(component.order$$.getValue().items).toEqual([ITEM]);
+      expect(ORDER.items).toEqual([ITEM]);
+      expect(ORDER.total).toEqual(10);
 
       // when
       component.addProductTo(ORDER, SECOND_PRODUCT.id, 3);
 
       // then
-      expect(component.order$$.getValue().items.length).toEqual(2);
-      expect(component.order$$.getValue().items[0].productId).toEqual(ITEM.productId);
-      expect(component.order$$.getValue().items[0].quantity).toEqual(ITEM.quantity);
-      expect(component.order$$.getValue().items[0].total).toEqual(ITEM.total);
-      expect(component.order$$.getValue().items[1].productId).toEqual(SECOND_PRODUCT.id);
-      expect(component.order$$.getValue().items[1].quantity).toEqual(3);
-      expect(component.order$$.getValue().items[1].total).toEqual(SECOND_PRODUCT.price * 3);
+      expect(ORDER.items.length).toEqual(2);
+      expect(ORDER.items[0].productId).toEqual(ITEM.productId);
+      expect(ORDER.items[0].quantity).toEqual(ITEM.quantity);
+      expect(ORDER.items[0].total).toEqual(ITEM.total);
+      expect(ORDER.items[1].productId).toEqual(SECOND_PRODUCT.id);
+      expect(ORDER.items[1].quantity).toEqual(3);
+      expect(ORDER.items[1].total).toEqual(SECOND_PRODUCT.price * 3);
+      expect(ORDER.total).toEqual(46);
     });
   });
 
@@ -191,14 +188,44 @@ describe('OrderDetailContainer', () => {
       };
 
       expect(ORDER.items.length).toEqual(1);
-      
+
       // when
       fixture.detectChanges();
       component.removeProductFrom(ORDER, FIRST_PRODUCT.id);
-      
+
       // then
       expect(ORDER.items.length).toEqual(0);
     });
 
+    it('should calculate the new total', () => {
+      // given
+      const ITEM: Item = {
+        productId: FIRST_PRODUCT.id,
+        quantity: 2,
+        unitPrice: 5,
+        total: 10,
+      };
+      const ITEM_2: Item = {
+        productId: SECOND_PRODUCT.id,
+        quantity: 2,
+        unitPrice: 5,
+        total: 10,
+      };
+      const ORDER: Order = {
+        id: ORDER_ID,
+        customerId: '3',
+        items: [ITEM, ITEM_2],
+        total: 20,
+      };
+
+      expect(ORDER.total).toEqual(20);
+
+      // when
+      fixture.detectChanges();
+      component.removeProductFrom(ORDER, FIRST_PRODUCT.id);
+
+      // then
+      expect(ORDER.total).toEqual(10);
+    });
   });
 });
