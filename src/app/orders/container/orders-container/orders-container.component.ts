@@ -22,7 +22,7 @@ export class OrdersContainerComponent implements OnInit {
 
   ngOnInit(): void {
     this.orderHttpService
-      .getOrdersWithCustomers()
+      .getOrders()
       .subscribe((orders: OrderWithCustomer[]) => {
         this.orders$$.next(orders);
       });

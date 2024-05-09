@@ -10,7 +10,7 @@
             <div class="card-body">
               <div class="row mb-2">
                 <div class="col">
-                  <span class="fs-5 fw-bold">Product Name</span>&nbsp;<span class="text-body-tertiary">({{item.productId}})</span>
+                  <span class="fs-5 fw-bold">{{getProductName(item.productId)}}</span>&nbsp;<span class="text-body-tertiary">({{item.productId}})</span>
                 </div>
               </div>
               <div class="row">
@@ -32,6 +32,30 @@
         <div class="col"></div>
       </div>
     }
-    <button class="btn btn-primary rounded-pill" (click)="addProduct()">Add product</button>
+
+    @if(products$$ | async; as products) {
+      <form class="row g-3 align-items-center" [formGroup]="orderForm">   
+        <div class="col-3">
+          <label for="selectProduct">Product</label>
+          <select class="form-select" id="selectProduct" formControlName="productId">
+            <option value="null">Choose product...</option>
+            @for (product of products; track product.id) {
+              <option [value]="product.id">{{product.description}} (€{{product.price}})</option>
+            }
+          </select>
+        </div>
+
+        <div class="col-1">
+          <label for="quantity">Quantity</label>
+          <div class="input-group">
+            <input  class="form-control" id="quantity" formControlName="quantity">
+          </div>
+        </div>
+      
+        <div class="col">
+          <button type="submit" class="btn btn-primary rounded-pill mt-4" (click)="addProduct()">Add product</button>
+        </div>
+      </form>
+    }
   </div>
 }

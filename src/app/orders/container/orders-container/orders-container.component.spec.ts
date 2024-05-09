@@ -10,7 +10,7 @@ describe('OrdersContainerComponent', () => {
   let component: OrdersContainerComponent;
   let fixture: ComponentFixture<OrdersContainerComponent>;
   let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, [
-    'getOrdersWithCustomers',
+    'getOrders',
   ]);
 
   beforeEach(async () => {
@@ -26,7 +26,7 @@ describe('OrdersContainerComponent', () => {
   describe('#ngOnInit', () => {
     it('should get all orders and emit on orders$$', (done) => {
       // given
-      orderHttpServiceMock.getOrdersWithCustomers.and.returnValue(of([]));
+      orderHttpServiceMock.getOrders.and.returnValue(of([]));
 
       component.orders$$.subscribe((orders: Order[]) => {
         expect(orders).toEqual([]);
@@ -37,7 +37,7 @@ describe('OrdersContainerComponent', () => {
       component.ngOnInit();
 
       // then
-      expect(orderHttpServiceMock.getOrdersWithCustomers).toHaveBeenCalled();
+      expect(orderHttpServiceMock.getOrders).toHaveBeenCalled();
     });
   });
 });

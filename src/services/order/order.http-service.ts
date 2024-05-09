@@ -4,7 +4,10 @@ import { mapOrderFrom } from './order.mapper';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/internal/operators/map';
 import { combineLatest } from 'rxjs';
-import { Customer, CustomerHttpService } from '../customer/customer.http-service';
+import {
+  Customer,
+  CustomerHttpService,
+} from '../customer/customer.http-service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,13 +18,24 @@ export class OrderHttpService {
     private customerHttpService: CustomerHttpService
   ) {}
 
-  getOrder(orderId: string): Observable<Order> {
+  private getOrderWithoutCustomerName(orderId: string): Observable<Order> {
     return this.http
       .get<OrderApiModel>(`/api/orders/${orderId}`)
       .pipe(map((orderApiModel: OrderApiModel) => mapOrderFrom(orderApiModel)));
   }
 
-  private getOrders(): Observable<Order[]> {
+  getOrder(orderId: string): Observable<OrderWithCustomer> {
+    return combineLatest([
+      this.getOrderWithoutCustomerName(orderId),
+      this.customerHttpService.getCustomers(),
+    ]).pipe(
+      map(([order, customers]: [Order, Customer[]]) =>
+        this.addCustomerNameToOrder(order, customers)
+      )
+    );
+  }
+
+  private getOrdersWithoutCustomerName(): Observable<Order[]> {
     return this.http
       .get<OrderApiModel[]>('/api/orders')
       .pipe(
@@ -33,22 +47,20 @@ export class OrderHttpService {
       );
   }
 
-  getOrdersWithCustomers(): Observable<OrderWithCustomer[]> {
+  getOrders(): Observable<OrderWithCustomer[]> {
     return combineLatest([
-      this.getOrders(),
+      this.getOrdersWithoutCustomerName(),
       this.customerHttpService.getCustomers(),
     ]).pipe(
-      map(([orders, customers]: [Order[], Customer[]]) =>
-        this.addCustomerNameToOrders(orders, customers)
-      )
+      map(([orders, customers]: [Order[], Customer[]]) => orders.map((order: Order) => this.addCustomerNameToOrder(order, customers)))
     );
   }
 
-  private addCustomerNameToOrders(
-    orders: Order[],
+  private addCustomerNameToOrder(
+    order: Order,
     customers: Customer[]
-  ): OrderWithCustomer[] {
-    return orders.map((order: Order) => {
+  ): OrderWithCustomer {
+
       const customer = customers.find(
         (customer: Customer) => customer.id === order.customerId
       );
@@ -59,7 +71,6 @@ export class OrderHttpService {
         ...order,
         customerName: customer?.name ?? '',
       };
-    });
   }
 }
 
