@@ -17,7 +17,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { HttpErrorResponse } from '@angular/common/http';
+import { NotificationService } from '../../../services/notifications/notification.service';
 
 @Component({
   selector: 'app-order-detail-container',
@@ -33,7 +33,8 @@ export class OrderDetailContainer implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private orderHttpService: OrderHttpService,
-    private productHttpService: ProductHttpService
+    private productHttpService: ProductHttpService,
+    private notificationService: NotificationService
   ) {}
   orderForm = new FormGroup({
     productId: new FormControl('', Validators.required),
@@ -129,11 +130,16 @@ export class OrderDetailContainer implements OnInit {
 
   placeOrder(order: Order): void {
     this.orderHttpService.placeOrder(order).subscribe({
-      error: (error) =>
+      next: () => this.notificationService.success('Order placed successfully'),
+      error: (error) => {
+        this.notificationService.error(
+          `We could not place order ${order.id}, please try again later`
+        );
         console.error(
           `[ORDER DETAIL CONTAINER] An error occured while placing order ${order.id}`,
           error
-        ),
+        );
+      },
     });
   }
 }
