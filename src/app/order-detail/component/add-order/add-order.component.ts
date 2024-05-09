@@ -9,12 +9,13 @@ import { FormGroup, ReactiveFormsModule } from '@angular/forms';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './add-order.component.html',
 })
-export class AddOrderComponent  {
+export class AddOrderComponent {
   @Input() products!: Product[];
   @Input() orderForm!: FormGroup;
-
+  
   @Output() addProductClicked$ = new EventEmitter<void>();
 
+  
   protected printWith2Decimals(value: number): string {
     return value.toFixed(2);
   }

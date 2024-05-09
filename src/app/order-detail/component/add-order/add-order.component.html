@@ -8,7 +8,7 @@
         id="selectProduct"
         formControlName="productId"
       >
-        <option value="null">Choose product...</option>
+        <option value="">Choose product...</option>
         @for (product of products; track product.id) {
         <option [value]="product.id">
           {{ product.description }} (€{{ printWith2Decimals(product.price) }})
@@ -19,9 +19,11 @@
 
     <div class="col-1">
       <label for="quantity">Quantity</label>
-      <div class="input-group">
-        <input class="form-control" id="quantity" formControlName="quantity" />
-      </div>
+      <input
+        class="form-control"
+        id="quantity"
+        formControlName="quantity"
+      />
     </div>
   </div>
   <div class="row">

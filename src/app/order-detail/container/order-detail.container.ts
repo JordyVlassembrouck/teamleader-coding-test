@@ -47,8 +47,8 @@ export class OrderDetailContainer implements OnInit {
     private notificationService: NotificationService
   ) {}
   orderForm = new FormGroup({
-    productId: new FormControl('', Validators.required),
-    quantity: new FormControl(0, Validators.required),
+    productId: new FormControl('', [Validators.required]),
+    quantity: new FormControl(0, [Validators.required]),
   });
 
   ngOnInit(): void {
@@ -65,13 +65,17 @@ export class OrderDetailContainer implements OnInit {
   }
 
   addProductTo(order: Order, productId: string, quantity: number): void {
-    const item = this.findItemInOrder(order, productId);
-    if (item) {
-      this.addToExistingItem(item, quantity);
+    if (this.orderForm.valid) {
+      const item = this.findItemInOrder(order, productId);
+      if (item) {
+        this.addToExistingItem(item, quantity);
+      } else {
+        this.addNewItemToOrder(productId, quantity, order);
+      }
+      order.total = this.calculateNewTotal(order.items);
     } else {
-      this.addNewItemToOrder(productId, quantity, order);
+
     }
-    order.total = this.calculateNewTotal(order.items);
   }
 
   private findItemInOrder(order: Order, productId: string): Item | undefined {
