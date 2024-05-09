@@ -131,7 +131,7 @@ export class OrderDetailContainer implements OnInit {
     this.orderHttpService.placeOrder(order).subscribe({
       error: (error) =>
         console.error(
-          `[ORDER DETAIL CONTAINER] An error occured while placing order ${order.id}:`,
+          `[ORDER DETAIL CONTAINER] An error occured while placing order ${order.id}`,
           error
         ),
     });

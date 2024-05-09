@@ -11,6 +11,8 @@ import {
   Product,
   ProductHttpService,
 } from '../../../services/product/product.http-service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { throwError } from 'rxjs/internal/observable/throwError';
 
 const FIRST_PRODUCT: Product = {
   id: '1',
@@ -44,6 +46,7 @@ describe('OrderDetailContainer', () => {
   let fixture: ComponentFixture<OrderDetailContainer>;
   let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, [
     'getOrder',
+    'placeOrder',
   ]);
   let productHttpServiceMock = jasmine.createSpyObj(ProductHttpService, [
     'getProducts',
@@ -68,6 +71,7 @@ describe('OrderDetailContainer', () => {
     component = fixture.componentInstance;
 
     orderHttpServiceMock.getOrder.and.returnValue(of(ORDER));
+    orderHttpServiceMock.placeOrder.and.returnValue(of(ORDER.id));
     productHttpServiceMock.getProducts.and.returnValue(of(PRODUCTS));
   });
 
@@ -238,6 +242,20 @@ describe('OrderDetailContainer', () => {
 
       // then
       expect(orderHttpServiceMock.placeOrder).toHaveBeenCalledWith(ORDER);
+    });
+
+    it('logs the error message when http service throws an error', () => {
+      // given
+      const error = new HttpErrorResponse({ status: 400, error: 'Bad request' });
+      orderHttpServiceMock.placeOrder.and.returnValue(throwError(() => error));
+      spyOn(console, 'error');
+
+      // when
+      component.placeOrder(ORDER);
+
+      // then
+      expect(orderHttpServiceMock.placeOrder).toHaveBeenCalledWith(ORDER);
+      expect(console.error).toHaveBeenCalledWith(`[ORDER DETAIL CONTAINER] An error occured while placing order ${ORDER.id}`, error);
     });
   });
 });

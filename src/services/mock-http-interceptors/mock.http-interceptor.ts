@@ -85,7 +85,7 @@ export class MockHttpInterceptor implements HttpInterceptor {
     request: HttpRequest<any>
   ): Observable<HttpResponse<any>> {
     if (Math.random() > 0.5) {
-      console.log(`[HTTP INTERCEPTOR] Order ${request.body['id']} has been placed:`, request.body);
+      console.log(`[HTTP INTERCEPTOR] Order ${request.body['id']} has been placed`, request.body);
       return of(new HttpResponse({ status: 204, body: request.body }));
     } else {
       throw new HttpErrorResponse({ status: 400, error: 'Bad request' });
