@@ -1,17 +1,37 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { OrderDetailContainer } from './order-detail.container';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { OrderHttpService } from '../../../services/order/order.http-service';
+import {
+  Item,
+  Order,
+  OrderHttpService,
+} from '../../../services/order/order.http-service';
 import { of } from 'rxjs/internal/observable/of';
 import { ProductHttpService } from '../../../services/product/product.http-service';
 
+const ITEM: Item = {
+  productId: '123',
+  quantity: 2,
+  unitPrice: 5.00,
+  total: 10.00,
+};
 const ORDER_ID = '123';
+const ORDER: Order = {
+  id: ORDER_ID,
+  customerId: '456',
+  items: [ITEM],
+  total: 45.60,
+};
 
 describe('OrderDetailContainer', () => {
   let component: OrderDetailContainer;
   let fixture: ComponentFixture<OrderDetailContainer>;
-  let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, ['getOrder']);
-  let productHttpServiceMock = jasmine.createSpyObj(ProductHttpService, ['getProducts']);
+  let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, [
+    'getOrder',
+  ]);
+  let productHttpServiceMock = jasmine.createSpyObj(ProductHttpService, [
+    'getProducts',
+  ]);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -31,7 +51,7 @@ describe('OrderDetailContainer', () => {
     fixture = TestBed.createComponent(OrderDetailContainer);
     component = fixture.componentInstance;
 
-    orderHttpServiceMock.getOrder.and.returnValue(of({}));
+    orderHttpServiceMock.getOrder.and.returnValue(of(ORDER));
     productHttpServiceMock.getProducts.and.returnValue(of([]));
   });
 
@@ -52,7 +72,9 @@ describe('OrderDetailContainer', () => {
       spyOn(route.snapshot.paramMap, 'get').and.returnValue(null);
 
       // when then
-      expect(() => component.ngOnInit()).toThrowError('No order ID found in the URL');
+      expect(() => component.ngOnInit()).toThrowError(
+        'No order ID found in the URL'
+      );
     });
 
     it('should get all the products', () => {
@@ -67,15 +89,23 @@ describe('OrderDetailContainer', () => {
   });
 
   describe('#addProduct', () => {
-    it('should log "add product"', () => {
+    it('should add new product to the order', () => {
       // given
-      spyOn(console, 'log');
+      const newItem: Item = {
+        productId: '456',
+        quantity: 3,
+        unitPrice: 5.00,
+        total: 15.00,
+      };
+
+      fixture.detectChanges();
+      expect(component.order$$.getValue().items).toEqual([ITEM]);
 
       // when
-      component.addProduct();
+      component.addProductTo(ORDER, newItem.productId, newItem.quantity);
 
       // then
-      expect(console.log).toHaveBeenCalledWith('add product');
+      expect(component.order$$.getValue().items).toEqual([ITEM, newItem]);
     });
   });
 
@@ -86,6 +116,7 @@ describe('OrderDetailContainer', () => {
       spyOn(console, 'log');
 
       // when
+      fixture.detectChanges();
       component.removeProduct(productId);
 
       // then

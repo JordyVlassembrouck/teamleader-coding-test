@@ -92,7 +92,7 @@ export interface Order {
   id: string;
   customerId: string;
   items: Item[];
-  total: string;
+  total: number;
 }
 
 export interface OrderWithCustomer extends Order {
@@ -101,7 +101,7 @@ export interface OrderWithCustomer extends Order {
 
 export interface Item {
   productId: string;
-  quantity: string;
-  unitPrice: string;
-  total: string;
+  quantity: number;
+  unitPrice: number;
+  total: number;
 }

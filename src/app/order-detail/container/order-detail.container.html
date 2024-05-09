@@ -53,7 +53,7 @@
         </div>
       
         <div class="col">
-          <button type="submit" class="btn btn-primary rounded-pill mt-4" (click)="addProduct()">Add product</button>
+          <button type="submit" class="btn btn-primary rounded-pill mt-4" (click)="addProductTo(order, orderForm.controls['productId'].value ?? '0', orderForm.controls['quantity'].value ?? '0')">Add product</button>
         </div>
       </form>
     }

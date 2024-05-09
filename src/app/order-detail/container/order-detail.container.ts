@@ -52,11 +52,7 @@ export class OrderDetailContainer implements OnInit {
     });
   }
 
-  addProduct(): void {
-    let order = this.order$$.getValue();
-    const productId = this.orderForm.value.productId ?? '0';
-    const quantity = this.orderForm.value.quantity ?? '0';
-
+  addProductTo(order: Order, productId: string, quantity: number): void {
     const item = this.findItemInOrder(order, productId);
     if (item) {
       this.addToExistingItem(item, quantity);
@@ -70,37 +66,29 @@ export class OrderDetailContainer implements OnInit {
     return order.items.find((item: Item) => item.productId === productId);
   }
 
-  private addToExistingItem(item: Item, quantity: string) {
-    item.quantity = (parseInt(item.quantity) + parseInt(quantity)).toString();
-    item.total = this.formatToStringWithTwoDecimals(
-      parseFloat(item.unitPrice) * parseFloat(item.quantity)
-    );
+  private addToExistingItem(item: Item, quantity: number) {
+    item.quantity = item.quantity + quantity;
+    item.total = item.unitPrice * item.quantity;
   }
 
-  private formatToStringWithTwoDecimals(value: number): string {
-    return value.toFixed(2);
-  }
-
-  private addNewItemToOrder(productId: string, quantity: string, order: Order) {
+  private addNewItemToOrder(productId: string, quantity: number, order: Order) {
     const newItem = this.createNewItemOrder(productId, quantity);
     order.items.push(newItem);
   }
 
-  private createNewItemOrder(productId: string, quantity: string): Item {
+  private createNewItemOrder(productId: string, quantity: number): Item {
     const unitPrice =
       this.products$$
         .getValue()
         .find(
           (product: Product) => product.id === this.orderForm.value.productId
-        )?.price ?? '0';
+        )?.price ?? 0;
 
     const newItem: Item = {
       productId: productId,
       quantity: quantity,
       unitPrice: unitPrice,
-      total: this.formatToStringWithTwoDecimals(
-        parseFloat(unitPrice) * parseFloat(quantity)
-      ),
+      total: unitPrice * quantity,
     };
 
     return newItem;

@@ -5,7 +5,7 @@ import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
-import customers from '../../assets/data/customers.json';
+import mockCustomers from '../../assets/data/customers.json';
 
 describe('CustomerHttpService', () => {
   let service: CustomerHttpService;
@@ -28,20 +28,20 @@ describe('CustomerHttpService', () => {
       service.getCustomers().subscribe((customer: Customer[]) => {
         // then
         expect(customer.length).toEqual(3);
-        expect(customer[0].id).toEqual(customers[0].id);
-        expect(customer[0].name).toEqual(customers[0].name);
-        expect(customer[0].since).toEqual(customers[0].since);
-        expect(customer[0].revenue).toEqual(customers[0].revenue);
-        expect(customer[1].id).toEqual(customers[1].id);
-        expect(customer[1].name).toEqual(customers[1].name);
-        expect(customer[1].since).toEqual(customers[1].since);
-        expect(customer[1].revenue).toEqual(customers[1].revenue);
+        expect(customer[0].id).toEqual(mockCustomers[0].id);
+        expect(customer[0].name).toEqual(mockCustomers[0].name);
+        expect(customer[0].since).toEqual(mockCustomers[0].since);
+        expect(customer[0].revenue).toEqual(mockCustomers[0].revenue);
+        expect(customer[1].id).toEqual(mockCustomers[1].id);
+        expect(customer[1].name).toEqual(mockCustomers[1].name);
+        expect(customer[1].since).toEqual(mockCustomers[1].since);
+        expect(customer[1].revenue).toEqual(mockCustomers[1].revenue);
         done();
       });
       const req = httpTestingController.expectOne('/api/customers');
 
       // when
-      req.flush(customers);
+      req.flush(mockCustomers);
       httpTestingController.verify();
     });
   });
