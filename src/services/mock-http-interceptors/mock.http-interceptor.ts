@@ -1,4 +1,11 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
 import * as firstOrder from '../../assets/data/example-orders/order1.json';
 import * as secondOrder from '../../assets/data/example-orders/order2.json';
 import * as thirdOrder from '../../assets/data/example-orders/order3.json';
@@ -8,6 +15,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { Injectable } from '@angular/core';
 import { OrderApiModel } from '../order/order.http-service';
+import { catchError, map } from 'rxjs';
 
 const ORDERS = [firstOrder, secondOrder, thirdOrder];
 const CUSTOMERS = customers;
@@ -21,16 +29,42 @@ export class MockHttpInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (request.url === '/api/orders') {
+    if (this.isGetOrdersRequest(request)) {
       return this.mockGetOrders();
-    } else if (request.url.includes('/api/orders/')) {
+    } else if (this.isGetOrderRequest(request)) {
       return this.mockGetOrder(request.url);
-    } else if (request.url === '/api/customers') {
+    } else if (this.isPostOrderRequest(request)) {
+      return this.mockPostOrder(request);
+    } else if (this.isGetCustomersRequest(request)) {
       return this.mockGetCustomers();
-    } else if (request.url === '/api/products') {
+    } else if (this.isGetProductsRequest(request)) {
       return this.mockGetProducts();
     }
     return next.handle(request);
+  }
+
+  private isGetOrdersRequest(request: HttpRequest<any>): boolean {
+    return this.isGetRequest(request) && request.url === '/api/orders';
+  }
+
+  private isGetRequest(request: HttpRequest<any>): boolean {
+    return request.method === 'GET';
+  }
+
+  private isGetOrderRequest(request: HttpRequest<any>): boolean {
+    return this.isGetRequest(request) && request.url.includes('/api/orders/');
+  }
+
+  private isPostOrderRequest(request: HttpRequest<any>): boolean {
+    return request.method === 'POST' && request.url === '/api/orders';
+  }
+
+  private isGetCustomersRequest(request: HttpRequest<any>): boolean {
+    return this.isGetRequest(request) && request.url === '/api/customers';
+  }
+
+  private isGetProductsRequest(request: HttpRequest<any>): boolean {
+    return this.isGetRequest(request) && request.url === '/api/products';
   }
 
   private mockGetOrders(): Observable<HttpResponse<any>> {
@@ -41,9 +75,20 @@ export class MockHttpInterceptor implements HttpInterceptor {
     const orderId = url.split('/api/orders/').pop();
     const order = ORDERS.find((order: OrderApiModel) => order.id === orderId);
     if (!order) {
-      return of(new HttpResponse({ status: 404 }));
+      throw new HttpErrorResponse({ status: 404, error: 'Order not found' });
     } else {
       return of(new HttpResponse({ status: 200, body: order }));
+    }
+  }
+
+  private mockPostOrder(
+    request: HttpRequest<any>
+  ): Observable<HttpResponse<any>> {
+    if (Math.random() > 0.5) {
+      console.log(`[HTTP INTERCEPTOR] Order ${request.body['id']} has been placed:`, request.body);
+      return of(new HttpResponse({ status: 204, body: request.body }));
+    } else {
+      throw new HttpErrorResponse({ status: 400, error: 'Bad request' });
     }
   }
 

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { mapApiModelToOrder } from './order.mapper';
+import { mapApiModelToOrder, mapOrderToApiModel } from './order.mapper';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/internal/operators/map';
 import { combineLatest } from 'rxjs';
@@ -21,7 +21,9 @@ export class OrderHttpService {
   private getOrderWithoutCustomerName(orderId: string): Observable<Order> {
     return this.http
       .get<OrderApiModel>(`/api/orders/${orderId}`)
-      .pipe(map((orderApiModel: OrderApiModel) => mapApiModelToOrder(orderApiModel)));
+      .pipe(
+        map((orderApiModel: OrderApiModel) => mapApiModelToOrder(orderApiModel))
+      );
   }
 
   getOrder(orderId: string): Observable<OrderWithCustomer> {
@@ -52,7 +54,11 @@ export class OrderHttpService {
       this.getOrdersWithoutCustomerName(),
       this.customerHttpService.getCustomers(),
     ]).pipe(
-      map(([orders, customers]: [Order[], Customer[]]) => orders.map((order: Order) => this.addCustomerNameToOrder(order, customers)))
+      map(([orders, customers]: [Order[], Customer[]]) =>
+        orders.map((order: Order) =>
+          this.addCustomerNameToOrder(order, customers)
+        )
+      )
     );
   }
 
@@ -60,17 +66,23 @@ export class OrderHttpService {
     order: Order,
     customers: Customer[]
   ): OrderWithCustomer {
+    const customer = customers.find(
+      (customer: Customer) => customer.id === order.customerId
+    );
+    if (!customer) {
+      console.error(`Customer not found for order ${order.id}`);
+    }
+    return {
+      ...order,
+      customerName: customer?.name ?? '',
+    };
+  }
 
-      const customer = customers.find(
-        (customer: Customer) => customer.id === order.customerId
-      );
-      if (!customer) {
-        console.error(`Customer not found for order ${order.id}`);
-      }
-      return {
-        ...order,
-        customerName: customer?.name ?? '',
-      };
+  placeOrder(order: Order): Observable<string> {
+    const orderApiModel = mapOrderToApiModel(order);
+    return this.http.post<OrderApiModel>('/api/orders', orderApiModel).pipe(
+      map((apiModel: OrderApiModel) => apiModel.id)
+    );
   }
 }
 

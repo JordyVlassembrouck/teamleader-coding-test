@@ -6,7 +6,7 @@
         <a class="link-secondary link-offset-2 link-underline link-underline-opacity-0" [routerLink]="['orders']"><i class="bi bi-arrow-left"></i> Back to orders</a>
         <div class="d-flex justify-content-between">
           <h2 class="mt-4 mb-4">Order {{order.id}}</h2>
-          <button class="btn btn-primary rounded-pill mt-4 mb-4">Place order</button>
+          <button class="btn btn-primary rounded-pill mt-4 mb-4" (click)="placeOrder(order)">Place order</button>
         </div>
         <h3 class="mb-4">Total amount: €{{printWith2Decimals(order.total)}}</h3>
       </div>

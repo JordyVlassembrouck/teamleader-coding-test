@@ -17,3 +17,23 @@ function mapApiModelToItem(item: ItemApiModel): Item {
     total: parseFloat(item.total),
   };
 }
+
+export function mapOrderToApiModel(order: Order): OrderApiModel {
+  return {
+    id: order.id,
+    'customer-id': order.customerId,
+    items: order.items.map((item: Item) => mapItemToApiModel(item)),
+    total: order.total.toFixed(2),
+  };
+}
+
+
+function mapItemToApiModel(item: Item): ItemApiModel {
+  return {
+    'product-id': item.productId,
+    quantity: item.quantity.toString(),
+    'unit-price': item.unitPrice.toFixed(2),
+    total: item.total.toFixed(2),
+  };
+}
+

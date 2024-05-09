@@ -228,4 +228,16 @@ describe('OrderDetailContainer', () => {
       expect(ORDER.total).toEqual(10);
     });
   });
+
+  describe('#placeOrder', () => {
+    it('calls the order http service to place the order', () => {
+      // given
+
+      // when
+      component.placeOrder(ORDER);
+
+      // then
+      expect(orderHttpServiceMock.placeOrder).toHaveBeenCalledWith(ORDER);
+    });
+  });
 });

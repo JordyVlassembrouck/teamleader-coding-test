@@ -17,6 +17,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-order-detail-container',
@@ -59,7 +60,7 @@ export class OrderDetailContainer implements OnInit {
     } else {
       this.addNewItemToOrder(productId, quantity, order);
     }
-    order.total = this.calculateNewTotal(order.items)
+    order.total = this.calculateNewTotal(order.items);
   }
 
   private findItemInOrder(order: Order, productId: string): Item | undefined {
@@ -96,7 +97,7 @@ export class OrderDetailContainer implements OnInit {
     order.items = order.items.filter(
       (item: Item) => item.productId !== productId
     );
-    order.total = this.calculateNewTotal(order.items)
+    order.total = this.calculateNewTotal(order.items);
   }
 
   private calculateNewTotal(items: Item[]): number {
@@ -124,5 +125,15 @@ export class OrderDetailContainer implements OnInit {
     } else {
       return 0;
     }
+  }
+
+  placeOrder(order: Order): void {
+    this.orderHttpService.placeOrder(order).subscribe({
+      error: (error) =>
+        console.error(
+          `[ORDER DETAIL CONTAINER] An error occured while placing order ${order.id}:`,
+          error
+        ),
+    });
   }
 }
