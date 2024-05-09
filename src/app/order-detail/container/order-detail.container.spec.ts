@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { OrderDetailContainerComponent } from './order-detail-container.component';
+import { OrderDetailContainer } from './order-detail.container';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { OrderHttpService } from '../../../../services/order/order.http-service';
+import { OrderHttpService } from '../../../services/order/order.http-service';
 import { of } from 'rxjs/internal/observable/of';
-import { ProductHttpService } from '../../../../services/product/product.http-service';
+import { ProductHttpService } from '../../../services/product/product.http-service';
 
 const ORDER_ID = '123';
 
-describe('OrderDetailContainerComponent', () => {
-  let component: OrderDetailContainerComponent;
-  let fixture: ComponentFixture<OrderDetailContainerComponent>;
+describe('OrderDetailContainer', () => {
+  let component: OrderDetailContainer;
+  let fixture: ComponentFixture<OrderDetailContainer>;
   let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, ['getOrder']);
   let productHttpServiceMock = jasmine.createSpyObj(ProductHttpService, ['getProducts']);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OrderDetailContainerComponent, RouterModule],
+      imports: [OrderDetailContainer, RouterModule],
       providers: [
         { provide: OrderHttpService, useValue: orderHttpServiceMock },
         { provide: ProductHttpService, useValue: productHttpServiceMock },
@@ -28,7 +28,7 @@ describe('OrderDetailContainerComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(OrderDetailContainerComponent);
+    fixture = TestBed.createComponent(OrderDetailContainer);
     component = fixture.componentInstance;
 
     orderHttpServiceMock.getOrder.and.returnValue(of({}));

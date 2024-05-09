@@ -4,12 +4,12 @@ import {
   Item,
   Order,
   OrderHttpService,
-} from '../../../../services/order/order.http-service';
+} from '../../../services/order/order.http-service';
 import { CommonModule } from '@angular/common';
 import {
   Product,
   ProductHttpService,
-} from '../../../../services/product/product.http-service';
+} from '../../../services/product/product.http-service';
 import { BehaviorSubject } from 'rxjs';
 import {
   FormControl,

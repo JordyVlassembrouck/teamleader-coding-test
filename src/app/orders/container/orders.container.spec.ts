@@ -3,23 +3,23 @@ import { of } from 'rxjs/internal/observable/of';
 import {
   Order,
   OrderHttpService,
-} from '../../../../services/order/order.http-service';
-import { OrdersContainerComponent } from './orders-container.component';
+} from '../../../services/order/order.http-service';
+import { OrdersContainer } from './orders.container';
 
-describe('OrdersContainerComponent', () => {
-  let component: OrdersContainerComponent;
-  let fixture: ComponentFixture<OrdersContainerComponent>;
+describe('OrdersContainer', () => {
+  let component: OrdersContainer;
+  let fixture: ComponentFixture<OrdersContainer>;
   let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, [
     'getOrders',
   ]);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [OrdersContainerComponent],
+      imports: [OrdersContainer],
       providers: [{ provide: OrderHttpService, useValue: orderHttpServiceMock }],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(OrdersContainerComponent);
+    fixture = TestBed.createComponent(OrdersContainer);
     component = fixture.componentInstance;
   });
 

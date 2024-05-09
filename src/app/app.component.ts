@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { OrdersContainer } from './orders/container/orders-container/orders.container';
+import { OrdersContainer } from './orders/container/orders.container';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({

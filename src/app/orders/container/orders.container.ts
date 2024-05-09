@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   OrderHttpService,
   OrderWithCustomer,
-} from '../../../../services/order/order.http-service';
+} from '../../../services/order/order.http-service';
 import { ReplaySubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
