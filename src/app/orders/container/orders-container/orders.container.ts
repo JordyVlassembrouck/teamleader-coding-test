@@ -12,10 +12,10 @@ import { Router, RouterModule } from '@angular/router';
   selector: 'app-orders-container',
   standalone: true,
   imports: [CommonModule, HttpClientModule, RouterModule],
-  templateUrl: './orders-container.component.html',
-  styleUrl: './orders-container.component.sass',
+  templateUrl: './orders.container.html',
+  styleUrl: './orders.container.sass',
 })
-export class OrdersContainerComponent implements OnInit {
+export class OrdersContainer implements OnInit {
   orders$$ = new ReplaySubject<OrderWithCustomer[]>(1);
 
   constructor(private orderHttpService: OrderHttpService, private router: Router) {}

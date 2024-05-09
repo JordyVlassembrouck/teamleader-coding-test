@@ -5,15 +5,15 @@ export const routes: Routes = [
     path: 'orders',
     loadComponent: () =>
       import(
-        './orders/container/orders-container/orders-container.component'
-      ).then((module) => module.OrdersContainerComponent),
+        './orders/container/orders-container/orders.container'
+      ).then((module) => module.OrdersContainer),
   },
   {
     path: 'orders/:id',
     loadComponent: () =>
       import(
-        './orders/container/order-detail-container/order-detail-container.component'
-      ).then((module) => module.OrderDetailContainerComponent),
+        './orders/container/order-detail-container/order-detail.container'
+      ).then((module) => module.OrderDetailContainer),
   },
   {
     path: '**',
