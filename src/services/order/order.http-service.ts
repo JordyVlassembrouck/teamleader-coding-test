@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { mapOrderFrom } from './order.mapper';
+import { mapApiModelToOrder } from './order.mapper';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/internal/operators/map';
 import { combineLatest } from 'rxjs';
@@ -21,7 +21,7 @@ export class OrderHttpService {
   private getOrderWithoutCustomerName(orderId: string): Observable<Order> {
     return this.http
       .get<OrderApiModel>(`/api/orders/${orderId}`)
-      .pipe(map((orderApiModel: OrderApiModel) => mapOrderFrom(orderApiModel)));
+      .pipe(map((orderApiModel: OrderApiModel) => mapApiModelToOrder(orderApiModel)));
   }
 
   getOrder(orderId: string): Observable<OrderWithCustomer> {
@@ -41,7 +41,7 @@ export class OrderHttpService {
       .pipe(
         map((orderApiModels: OrderApiModel[]) =>
           orderApiModels.map((orderApiModel: OrderApiModel) =>
-            mapOrderFrom(orderApiModel)
+            mapApiModelToOrder(orderApiModel)
           )
         )
       );
