@@ -7,20 +7,36 @@ import {
   OrderHttpService,
 } from '../../../services/order/order.http-service';
 import { of } from 'rxjs/internal/observable/of';
-import { ProductHttpService } from '../../../services/product/product.http-service';
+import {
+  Product,
+  ProductHttpService,
+} from '../../../services/product/product.http-service';
 
-const ITEM: Item = {
-  productId: '123',
-  quantity: 2,
-  unitPrice: 5.00,
-  total: 10.00,
+const FIRST_PRODUCT: Product = {
+  id: '1',
+  description: 'product',
+  category: 'category',
+  price: 5.0,
 };
-const ORDER_ID = '123';
+const SECOND_PRODUCT: Product = {
+  id: '2',
+  description: 'product',
+  category: 'category',
+  price: 12.0,
+};
+const PRODUCTS = [FIRST_PRODUCT, SECOND_PRODUCT];
+const ITEM: Item = {
+  productId: FIRST_PRODUCT.id,
+  quantity: 2,
+  unitPrice: 5.0,
+  total: 10.0,
+};
+const ORDER_ID = '2';
 const ORDER: Order = {
   id: ORDER_ID,
-  customerId: '456',
+  customerId: '3',
   items: [ITEM],
-  total: 45.60,
+  total: 45.6,
 };
 
 describe('OrderDetailContainer', () => {
@@ -52,7 +68,7 @@ describe('OrderDetailContainer', () => {
     component = fixture.componentInstance;
 
     orderHttpServiceMock.getOrder.and.returnValue(of(ORDER));
-    productHttpServiceMock.getProducts.and.returnValue(of([]));
+    productHttpServiceMock.getProducts.and.returnValue(of(PRODUCTS));
   });
 
   describe('#ngOnInit', () => {
@@ -89,38 +105,100 @@ describe('OrderDetailContainer', () => {
   });
 
   describe('#addProduct', () => {
-    it('should add new product to the order', () => {
+    it('should add product to already existing items in the order', () => {
       // given
-      const newItem: Item = {
-        productId: '456',
-        quantity: 3,
-        unitPrice: 5.00,
-        total: 15.00,
+      const ITEM: Item = {
+        productId: FIRST_PRODUCT.id,
+        quantity: 2,
+        unitPrice: 5,
+        total: 10,
       };
+      const ORDER: Order = {
+        id: ORDER_ID,
+        customerId: '3',
+        items: [ITEM],
+        total: 20,
+      };
+      orderHttpServiceMock.getOrder.and.returnValue(of(ORDER));
 
       fixture.detectChanges();
       expect(component.order$$.getValue().items).toEqual([ITEM]);
 
       // when
+      const newItem: Item = {
+        productId: FIRST_PRODUCT.id,
+        quantity: 3,
+        unitPrice: 5,
+        total: 15,
+      };
+      
       component.addProductTo(ORDER, newItem.productId, newItem.quantity);
 
       // then
-      expect(component.order$$.getValue().items).toEqual([ITEM, newItem]);
+      expect(component.order$$.getValue().items.length).toEqual(1);
+      expect(component.order$$.getValue().items[0].productId).toEqual(ITEM.productId);
+      expect(component.order$$.getValue().items[0].quantity).toEqual(5);
+      expect(component.order$$.getValue().items[0].total).toEqual(25);
+    });
+
+    it('should add product as new item in the order when it does not yet exist', () => {
+      // given
+      const ITEM: Item = {
+        productId: FIRST_PRODUCT.id,
+        quantity: 2,
+        unitPrice: 5,
+        total: 10,
+      };
+      const ORDER: Order = {
+        id: ORDER_ID,
+        customerId: '3',
+        items: [ITEM],
+        total: 20,
+      };
+      orderHttpServiceMock.getOrder.and.returnValue(of(ORDER));
+
+      fixture.detectChanges();
+      expect(component.order$$.getValue().items).toEqual([ITEM]);
+
+      // when
+      component.addProductTo(ORDER, SECOND_PRODUCT.id, 3);
+
+      // then
+      expect(component.order$$.getValue().items.length).toEqual(2);
+      expect(component.order$$.getValue().items[0].productId).toEqual(ITEM.productId);
+      expect(component.order$$.getValue().items[0].quantity).toEqual(ITEM.quantity);
+      expect(component.order$$.getValue().items[0].total).toEqual(ITEM.total);
+      expect(component.order$$.getValue().items[1].productId).toEqual(SECOND_PRODUCT.id);
+      expect(component.order$$.getValue().items[1].quantity).toEqual(3);
+      expect(component.order$$.getValue().items[1].total).toEqual(SECOND_PRODUCT.price * 3);
     });
   });
 
   describe('#removeProduct', () => {
     it('should log "remove product" with the product ID', () => {
       // given
-      const productId = '456';
-      spyOn(console, 'log');
+      const ITEM: Item = {
+        productId: FIRST_PRODUCT.id,
+        quantity: 2,
+        unitPrice: 5,
+        total: 10,
+      };
+      const ORDER: Order = {
+        id: ORDER_ID,
+        customerId: '3',
+        items: [ITEM],
+        total: 20,
+      };
 
+      expect(ORDER.items.length).toEqual(1);
+      
       // when
       fixture.detectChanges();
-      component.removeProduct(productId);
-
+      component.removeProductFrom(ORDER, FIRST_PRODUCT.id);
+      
       // then
-      expect(console.log).toHaveBeenCalledWith('remove product', productId);
+      expect(ORDER.items.length).toEqual(0);
     });
+
   });
 });

@@ -31,4 +31,8 @@ export class OrdersContainer implements OnInit {
   protected openOrder(orderId: string): void {
     this.router.navigate(['orders', orderId]);
   }
+
+  protected printWith2Decimals(value: number): string {
+    return value.toFixed(2);
+  }
 }

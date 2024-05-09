@@ -14,7 +14,7 @@
         <tr class="clickable" (click)="openOrder(order.id)">
           <th scope="row">{{order.id}}</th>
           <td>{{order.customerName}}</td>
-          <td>{{order.total}}</td>
+          <td>{{printWith2Decimals(order.total)}}</td>
           <td>Draft</td>
         </tr>    
       }

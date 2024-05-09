@@ -36,7 +36,7 @@ export class OrderDetailContainer implements OnInit {
   ) {}
   orderForm = new FormGroup({
     productId: new FormControl('', Validators.required),
-    quantity: new FormControl('', Validators.required),
+    quantity: new FormControl(0, Validators.required),
   });
 
   ngOnInit(): void {
@@ -59,7 +59,6 @@ export class OrderDetailContainer implements OnInit {
     } else {
       this.addNewItemToOrder(productId, quantity, order);
     }
-    this.order$$.next(order);
   }
 
   private findItemInOrder(order: Order, productId: string): Item | undefined {
@@ -80,9 +79,7 @@ export class OrderDetailContainer implements OnInit {
     const unitPrice =
       this.products$$
         .getValue()
-        .find(
-          (product: Product) => product.id === this.orderForm.value.productId
-        )?.price ?? 0;
+        .find((product: Product) => product.id === productId)?.price ?? 0;
 
     const newItem: Item = {
       productId: productId,
@@ -94,12 +91,10 @@ export class OrderDetailContainer implements OnInit {
     return newItem;
   }
 
-  removeProduct(productId: string): void {
-    const order = this.order$$.getValue();
+  removeProductFrom(order: Order, productId: string): void {
     order.items = order.items.filter(
       (item: Item) => item.productId !== productId
     );
-    this.order$$.next(order);
   }
 
   getProductName(productId: string): string {
@@ -109,5 +104,19 @@ export class OrderDetailContainer implements OnInit {
         .find((product: Product) => product.id === productId)?.description ??
       'Unknown product'
     );
+  }
+
+  protected printWith2Decimals(value: number): string {
+    return value.toFixed(2);
+  }
+
+  protected parseIntFromFormControl(value: number | string | null): number {
+    if (typeof value === 'number') {
+      return value;
+    } else if (typeof value === 'string') {
+      return parseInt(value, 10);
+    } else {
+      return 0;
+    }
   }
 }
