@@ -1,7 +1,7 @@
 import { OrderApiModel } from './order.http-service';
-import { mapOrderFrom } from './order.mapper';
+import { mapApiModelToOrder } from './order.mapper';
 
-describe('#mapOrderFrom', () => {
+describe('#mapApiModelToOrder', () => {
   it('should map an OrderApiModel object to an Order object', () => {
     // given 
     const orderApiModel: OrderApiModel = {
@@ -25,7 +25,7 @@ describe('#mapOrderFrom', () => {
     };
 
     //when
-    const order = mapOrderFrom(orderApiModel);
+    const order = mapApiModelToOrder(orderApiModel);
 
     // then
     expect(order.id).toEqual('1');
@@ -52,7 +52,7 @@ describe('#mapOrderFrom', () => {
     };
 
     //when
-    const order = mapOrderFrom(orderApiModel);
+    const order = mapApiModelToOrder(orderApiModel);
 
     // then
     expect(order.items).toEqual([]);

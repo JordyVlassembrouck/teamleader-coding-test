@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/internal/operators/map';
-import { mapToInternalModel } from './product.mapper';
+import { mapApiModelToProduct } from './product.mapper';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +16,7 @@ export class ProductHttpService {
       .pipe(
         map((productApiModels: ProductApiModel[]) =>
           productApiModels.map((productApiModel: ProductApiModel) =>
-            mapToInternalModel(productApiModel)
+            mapApiModelToProduct(productApiModel)
           )
         )
       );

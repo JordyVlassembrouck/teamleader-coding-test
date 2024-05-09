@@ -1,7 +1,7 @@
 import { ProductApiModel } from './product.http-service';
-import { mapToInternalModel } from './product.mapper';
+import { mapApiModelToProduct } from './product.mapper';
 
-describe('#mapToInternalModel', () => {
+describe('#mapApiModelToProduct', () => {
   it('should map a ProductApiModel object to a Product object', () => {
     // given
     const productApiModel: ProductApiModel = {
@@ -12,7 +12,7 @@ describe('#mapToInternalModel', () => {
     };
 
     //when
-    const product = mapToInternalModel(productApiModel);
+    const product = mapApiModelToProduct(productApiModel);
 
     // then
     expect(product.id).toEqual(productApiModel.id);
