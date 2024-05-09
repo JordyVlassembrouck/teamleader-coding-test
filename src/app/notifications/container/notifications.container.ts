@@ -11,7 +11,6 @@ import {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './notifications.container.html',
-  styleUrl: './notifications.container.sass',
 })
 export class NotificationsContainer implements OnInit {
   notifications: Notification[] = [];

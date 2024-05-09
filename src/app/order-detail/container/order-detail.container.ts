@@ -24,7 +24,6 @@ import { NotificationService } from '../../../services/notifications/notificatio
   standalone: true,
   imports: [CommonModule, RouterModule, ReactiveFormsModule],
   templateUrl: './order-detail.container.html',
-  styleUrl: './order-detail.container.sass',
 })
 export class OrderDetailContainer implements OnInit {
   order$$ = new BehaviorSubject<Order>({} as Order);
