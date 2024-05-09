@@ -1,75 +1,28 @@
 @if (order$$ | async; as order) {
-  <div class="container">
-    <div class="row">
-      <div class="col-4"></div>
-      <div class="col-4">      
-        <a class="link-secondary link-offset-2 link-underline link-underline-opacity-0" [routerLink]="['orders']"><i class="bi bi-arrow-left"></i> Back to orders</a>
-        <div class="d-flex justify-content-between">
-          <h2 class="mt-4 mb-4">Order {{order.id}}</h2>
-          <button class="btn btn-primary rounded-pill mt-4 mb-4" (click)="placeOrder(order)">Place order</button>
-        </div>
-        <h3 class="mb-4">Total amount: €{{printWith2Decimals(order.total)}}</h3>
-      </div>
-    </div>
+<div class="container">
+  <app-order-header-component
+    [orderId]="order.id"
+    [total]="printWith2Decimals(order.total)"
+    (placeOrderClicked$)="placeOrder(order)"
+    (backButtonClicked$)="backButtonClicked()"
+  >
+  </app-order-header-component>
 
-    @for (item of order.items; track item.productId) {
-      <div class="row">
-        <div class="col-4"></div>
-        <div class="col-4">
-          <div class="card mb-2">
-            <div class="card-body">
-              <div class="row mb-2">
-                <div class="col">
-                  <span class="fs-5 fw-bold">{{getProductName(item.productId)}}</span>&nbsp;<span class="text-body-tertiary">({{item.productId}})</span>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col">
-                  {{item.quantity}} x €{{printWith2Decimals(item.unitPrice)}}
-                </div>
-                <div class="col text-end fw-bold">
-                  €{{printWith2Decimals(item.total)}}
-                </div>
-              </div>
-              <div class="row">
-              </div>
-            </div>    
-          </div>
-        </div>  
-        <div class="col-1">
-          <button type="button" class="btn btn-light btn-sm rounded-circle" (click)="removeProductFrom(order, item.productId)"><i class="bi bi-x-lg"></i></button>
-        </div>
-      </div>
-    }
-
-    @if(products$$ | async; as products) {
-      <form class="mt-4" [formGroup]="orderForm">   
-        <div class="row">
-          <div class="col-4"></div>
-          <div class="col-3">
-            <label for="selectProduct">Product</label>
-            <select class="form-select" id="selectProduct" formControlName="productId">
-              <option value="null">Choose product...</option>
-              @for (product of products; track product.id) {
-                <option [value]="product.id">{{product.description}} (€{{printWith2Decimals(product.price)}})</option>
-              }
-            </select>
-          </div>
-  
-          <div class="col-1">
-            <label for="quantity">Quantity</label>
-            <div class="input-group">
-              <input  class="form-control" id="quantity" formControlName="quantity">
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-4"></div>
-          <div class="col-4 d-grid">
-            <button type="submit" class="btn btn-outline-primary rounded-pill mt-4" (click)="addProductTo(order, orderForm.controls['productId'].value ?? '0', parseIntFromFormControl(orderForm.controls['quantity'].value))">Add product</button>
-          </div>
-        </div>
-      </form>
-    }
-  </div>
+  @for (item of order.items; track item.productId) {
+  <app-order-entry-component
+    [productName]="getProductName(item.productId)"
+    [productId]="item.productId"
+    [quantity]="item.quantity"
+    [unitPrice]="printWith2Decimals(item.unitPrice)"
+    [totalPrice]="printWith2Decimals(item.total)"
+    (removeProductClicked$)="removeProductFrom(order, item.productId)"
+  ></app-order-entry-component>
+  } @if(products$$ | async; as products) {
+  <app-add-order-component
+    [products]="products"
+    [orderForm]="orderForm"
+    (addProductClicked$)="addProductTo(order, orderForm.controls['productId'].value ?? '0', parseIntFromFormControl(orderForm.controls['quantity'].value))"
+  ></app-add-order-component>
+  }
+</div>
 }

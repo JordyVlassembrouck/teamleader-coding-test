@@ -1,23 +1,13 @@
-<h2>Orders</h2>
-<table class="table border table-hover mt-3 rounded-corners">
-  <thead class="table-light">
-    <tr>
-      <th scope="col">Order</th>
-      <th scope="col">Customer</th>
-      <th scope="col">Total</th>
-      <th scope="col">Status</th>
-    </tr>
-  </thead>
-  @if (orders$$ | async; as orders) {
-    <tbody>
-      @for (order of orders; track order.id) {
-        <tr class="clickable" (click)="openOrder(order.id)">
-          <th scope="row">{{order.id}}</th>
-          <td>{{order.customerName}}</td>
-          <td>{{printWith2Decimals(order.total)}}</td>
-          <td>Draft</td>
-        </tr>    
-      }
-    </tbody>
-  }
-</table>
+<div class="row">
+  <div class="col"></div>
+  <div class="col-8">
+    <h2 class="mt-4 mb-4">Orders</h2>
+    @if (orders$$ | async; as orders) {
+    <app-order-table-component
+      [orders]="orders"
+      (orderClicked$)="openOrder($event)"
+    ></app-order-table-component>
+    }
+  </div>
+  <div class="col"></div>
+</div>

@@ -1,0 +1,20 @@
+<div class="row mt-2">
+  <div class="col-4"></div>
+  <div class="col-4">
+    <a
+      class="link-secondary link-offset-2 link-underline link-underline-opacity-0 clickable"
+      (click)="backButtonClicked()"
+      ><i class="bi bi-arrow-left"></i> Back to orders</a
+    >
+    <div class="d-flex justify-content-between">
+      <h2 class="mt-4 mb-4">Order {{ orderId }}</h2>
+      <button
+        class="btn btn-primary rounded-pill mt-4 mb-4"
+        (click)="placeOrder()"
+      >
+        Place order
+      </button>
+    </div>
+    <h3 class="mb-4">Total amount: €{{ total }}</h3>
+  </div>
+</div>

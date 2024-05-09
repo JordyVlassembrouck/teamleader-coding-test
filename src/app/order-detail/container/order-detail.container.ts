@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import {
   Item,
   Order,
@@ -18,11 +18,21 @@ import {
   Validators,
 } from '@angular/forms';
 import { NotificationService } from '../../../services/notifications/notification.service';
+import { OrderEntryComponent } from '../component/order-entry/order-entry.component';
+import { AddOrderComponent } from '../component/add-order/add-order.component';
+import { OrderHeaderComponent } from '../component/order-header/order-header.component';
 
 @Component({
   selector: 'app-order-detail-container',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    OrderEntryComponent,
+    AddOrderComponent,
+    OrderHeaderComponent
+  ],
   templateUrl: './order-detail.container.html',
 })
 export class OrderDetailContainer implements OnInit {
@@ -31,6 +41,7 @@ export class OrderDetailContainer implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private orderHttpService: OrderHttpService,
     private productHttpService: ProductHttpService,
     private notificationService: NotificationService
@@ -94,6 +105,7 @@ export class OrderDetailContainer implements OnInit {
   }
 
   removeProductFrom(order: Order, productId: string): void {
+    console.log('foo');
     order.items = order.items.filter(
       (item: Item) => item.productId !== productId
     );
@@ -129,7 +141,10 @@ export class OrderDetailContainer implements OnInit {
 
   placeOrder(order: Order): void {
     this.orderHttpService.placeOrder(order).subscribe({
-      next: () => this.notificationService.showSuccessMessage('Order placed successfully'),
+      next: () =>
+        this.notificationService.showSuccessMessage(
+          'Order placed successfully'
+        ),
       error: (error) => {
         this.notificationService.showErrorMessage(
           `We could not place order ${order.id}, please try again later`
@@ -140,5 +155,9 @@ export class OrderDetailContainer implements OnInit {
         );
       },
     });
+  }
+
+  backButtonClicked(): void {
+    this.router.navigateByUrl('/orders');
   }
 }

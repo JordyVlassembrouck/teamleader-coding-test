@@ -1,0 +1,18 @@
+<table class="table border table-hover mt-3 rounded-corners">
+  <thead class="table-light">
+    <tr>
+      <th scope="col">Order</th>
+      <th scope="col">Customer</th>
+      <th scope="col">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (order of orders; track order.id) {
+    <tr class="clickable" (click)="orderClicked(order.id)">
+      <th scope="row">{{ order.id }}</th>
+      <td>{{ order.customerName }}</td>
+      <td>€{{ printWith2Decimals(order.total) }}</td>
+    </tr>
+    }
+  </tbody>
+</table>
