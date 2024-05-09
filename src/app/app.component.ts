@@ -9,5 +9,4 @@ import { NotificationsContainer } from './notifications/container/notifications.
   templateUrl: './app.component.html',
 })
 export class AppComponent {
-  title = 'teamleader-coding-test';
 }

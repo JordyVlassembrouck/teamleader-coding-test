@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import {
   NotificationService,
   Notification,
-  NotificationType,
 } from '../../../services/notifications/notification.service';
+import { NotificationComponent } from '../component/notification.component';
 
 @Component({
   selector: 'app-notifications-container',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NotificationComponent],
   templateUrl: './notifications.container.html',
 })
 export class NotificationsContainer implements OnInit {
@@ -18,20 +18,10 @@ export class NotificationsContainer implements OnInit {
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit(): void {
+    console.log(this.notificationService);
     this.notificationService.notifications$.subscribe(
       (notifications: Notification[]) => (this.notifications = notifications)
     );
-  }
-
-  getNotificationClass(type: NotificationType): string {
-    switch (type) {
-      case NotificationType.Success:
-        return 'bg-success-subtle text-success-emphasis';
-      case NotificationType.Error:
-        return 'bg-danger-subtle text-danger-emphasis';
-      default:
-        return 'bg-primary-subtle';
-    }
   }
 
   removeNotification(notificationId: number): void {

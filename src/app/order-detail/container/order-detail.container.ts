@@ -129,9 +129,9 @@ export class OrderDetailContainer implements OnInit {
 
   placeOrder(order: Order): void {
     this.orderHttpService.placeOrder(order).subscribe({
-      next: () => this.notificationService.success('Order placed successfully'),
+      next: () => this.notificationService.showSuccessMessage('Order placed successfully'),
       error: (error) => {
-        this.notificationService.error(
+        this.notificationService.showErrorMessage(
           `We could not place order ${order.id}, please try again later`
         );
         console.error(
