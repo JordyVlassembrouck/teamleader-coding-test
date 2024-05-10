@@ -1,5 +1,5 @@
 import { OrderApiModel } from './order.http-service';
-import { mapApiModelToOrder } from './order.mapper';
+import { mapApiModelToOrder, mapOrderToApiModel } from './order.mapper';
 
 describe('#mapApiModelToOrder', () => {
   it('should map an OrderApiModel object to an Order object', () => {
@@ -56,5 +56,63 @@ describe('#mapApiModelToOrder', () => {
 
     // then
     expect(order.items).toEqual([]);
+  });
+});
+
+describe('#mapOrderToApiModel', () => {
+  it('should map an Order object to an OrderApiModel object', () => {
+    // given 
+    const order = {
+      id: '1',
+      customerId: '2',
+      items: [
+        {
+          productId: 'B102',
+          quantity: 10,
+          unitPrice: 5.0,
+          total: 50.0
+        },
+        {
+          productId: 'B204',
+          quantity: 5,
+          unitPrice: 10.0,
+          total: 70.0
+        }
+      ],
+      total: 200.0
+    };
+
+    //when
+    const orderApiModel = mapOrderToApiModel(order);
+
+    // then
+    expect(orderApiModel.id).toEqual('1');
+    expect(orderApiModel['customer-id']).toEqual('2');
+    expect(orderApiModel.items.length).toEqual(2);
+    expect(orderApiModel.items[0]['product-id']).toEqual('B102');
+    expect(orderApiModel.items[0].quantity).toEqual('10');
+    expect(orderApiModel.items[0]['unit-price']).toEqual('5.00');
+    expect(orderApiModel.items[0].total).toEqual('50.00');
+    expect(orderApiModel.items[1]['product-id']).toEqual('B204');
+    expect(orderApiModel.items[1].quantity).toEqual('5');
+    expect(orderApiModel.items[1]['unit-price']).toEqual('10.00');
+    expect(orderApiModel.items[1].total).toEqual('70.00');
+    expect(orderApiModel.total).toEqual('200.00');
+  });
+
+  it('should map an Order object to an OrderApiModel object with empty items', () => {
+    // given 
+    const order = {
+      id: '1',
+      customerId: '2',
+      items: [],
+      total: 0
+    };
+
+    //when
+    const orderApiModel = mapOrderToApiModel(order);
+
+    // then
+    expect(orderApiModel.items).toEqual([]);
   });
 });
