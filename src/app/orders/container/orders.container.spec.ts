@@ -5,18 +5,23 @@ import {
   OrderHttpService,
 } from '../../../services/order/order.http-service';
 import { OrdersContainer } from './orders.container';
+import { Router, RouterModule } from '@angular/router';
 
 describe('OrdersContainer', () => {
   let component: OrdersContainer;
   let fixture: ComponentFixture<OrdersContainer>;
-  let orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, [
+  const orderHttpServiceMock = jasmine.createSpyObj(OrderHttpService, [
     'getOrders',
   ]);
+  const routerStub = jasmine.createSpyObj(Router, ['navigate']);
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OrdersContainer],
-      providers: [{ provide: OrderHttpService, useValue: orderHttpServiceMock }],
+      providers: [
+        { provide: OrderHttpService, useValue: orderHttpServiceMock },
+        { provide: Router, useValue: routerStub },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(OrdersContainer);
@@ -38,6 +43,18 @@ describe('OrdersContainer', () => {
 
       // then
       expect(orderHttpServiceMock.getOrders).toHaveBeenCalled();
+    });
+  });
+
+  describe('#openOrder', () => {
+    it('should navigate to orders/{id}', () => {
+      // given
+
+      // when
+      component.openOrder('1');
+
+      // then
+      expect(routerStub.navigate).toHaveBeenCalledWith(['orders', '1']);
     });
   });
 });

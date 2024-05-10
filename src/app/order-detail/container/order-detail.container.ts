@@ -73,8 +73,6 @@ export class OrderDetailContainer implements OnInit {
         this.addNewItemToOrder(productId, quantity, order);
       }
       order.total = this.calculateNewTotal(order.items);
-    } else {
-
     }
   }
 
@@ -109,7 +107,6 @@ export class OrderDetailContainer implements OnInit {
   }
 
   removeProductFrom(order: Order, productId: string): void {
-    console.log('foo');
     order.items = order.items.filter(
       (item: Item) => item.productId !== productId
     );
